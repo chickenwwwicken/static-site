@@ -12,8 +12,8 @@ class HTMLNode:
         html = ''
         if self.props == None:
             return html
-        for kv in self.props:
-            html += f' {kv}="{self.props[kv]}"'
+        for prop in self.props:
+            html += f' {prop}="{self.props[prop]}"'
         return html
 
     def __repr__(self):
@@ -21,37 +21,38 @@ class HTMLNode:
 
 
 class LeafNode(HTMLNode):
-    def __init__(self, tag, value, props=None):
-        super().__init__(tag, value, props, children=[])
+    def __init__(self, tag=None, value=None, props=None):
+        super().__init__(tag, value, None, props)
 
     def to_html(self):
-        props_str = ''
+        # props_str = ''
         if not self.value:
             raise ValueError('All Leaf Nodes must have value')
         if not self.tag:
             return f'{self.value}'
-        if self.props == None:
-            return f'<{self.tag}>{self.value}</{self.tag}>'
-        for prop in self.props:
-            props_str += f' {prop}="{self.props[prop]}"'
+        props_str = self.props_to_html() if self.props else ''
         return f'<{self.tag}{props_str}>{self.value}</{self.tag}>'
 
 
 class ParentNode(HTMLNode):
-    def __init__(self, tag, props=None, children=None):
-        super().__init__(tag, props, children)
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
 
     def to_html(self):
-        full_html = ""
 
         # validate 
         if not self.tag:
             raise ValueError('All Parent Nodes must have tag')
         if not self.children:
-            raise ValueError('U missin ur children boy')
+            raise ValueError('Parent Nodes must have children')
         
         # wrap the children in parent tags
-        full_html = f"<{self.tag}>"
+        # also w the logic of add props if necessary to initial parent tag...
+        # full_html = f"<{self.tag}>"
+        # props_str = ''
+
+        props_str = self.props_to_html() if self.props else ''
+        full_html = f'<{self.tag}{props_str}>'
 
         for child in self.children:
             # check if parent of leaf

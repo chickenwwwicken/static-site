@@ -1,48 +1,61 @@
 import unittest
-
-from textnode import TextNode, TextType
+from htmlnode import LeafNode
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 class TestTextNode(unittest.TestCase):
     def setUp(self):
-        self.text1_italic_urln = TextNode('text1', TextType.ITALIC)
-        self.text1_italic_url1 = TextNode('text1', TextType.ITALIC, 'www.url1.com')
-        self.text1_italic_url2 = TextNode('text1', TextType.ITALIC, 'www.url2.com')
-        self.text1_bold_urln = TextNode('text1', TextType.BOLD)
-        self.text1_bold_url1 = TextNode('text1', TextType.BOLD, 'www.url1.com')
-        self.text1_bold_url2 = TextNode('text1', TextType.BOLD, 'www.url2.com')
-        self.text2_italic_urln = TextNode('text2', TextType.ITALIC)
-        self.text2_italic_url1 = TextNode('text2', TextType.ITALIC, 'www.url1.com')
-        self.text2_italic_url2 = TextNode('text2', TextType.ITALIC, 'www.url2.com')
-        self.text2_bold_urln = TextNode('text2', TextType.BOLD)
-        self.text2_bold_url1 = TextNode('text2', TextType.BOLD, 'www.url1.com')
-        self.text2_bold_url2 = TextNode('text2', TextType.BOLD, 'www.url2.com')              
+
+        self.italic_node = TextNode('italic text', TextType.ITALIC)
+        self.bold_node = TextNode('some bold text', TextType.BOLD)
+        self.normal_node = TextNode('some text', TextType.NORMAL)
+        self.code_node = TextNode('somecode123', TextType.CODE)
+        self.link_node1 = TextNode('link1', TextType.LINK, 'www.url1.com')
+        self.image_node1 = TextNode('image1', TextType.IMAGE, 'www.url1.com')
 
     def test_eq(self):
         node = TextNode('This is a text node', TextType.BOLD)
         node2 = TextNode('This is a text node', TextType.BOLD)
         self.assertEqual(node, node2)
 
-    def test_not_eq(self):
-        self.assertNotEqual(self.text1_italic_urln, self.text1_italic_url1)
+    # normal node
+    def test_text_node_to_html_node_normal(self):
+        text_node = TextNode("This is a text", TextType.NORMAL)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.value, "This is a text")
+        self.assertIsNone(html_node.tag)
 
-    def test_url_eq(self):
-        self.assertEqual(self.text1_italic_url1.url, self.text1_bold_url1.url)
+    # bold node
+    def test_text_node_to_html_node_bold(self):
+        text_node = TextNode("This is bold", TextType.BOLD)
+        html_node = text_node_to_html_node(text_node)
+        self.assertEqual(html_node.tag, "b")
+        self.assertEqual(html_node.value, "This is bold")
 
-    def test_url_not_eq(self):
-        self.assertNotEqual(self.text1_italic_url1.url, self.text1_italic_url2.url)
-
-    def test_text_eq(self):
-        self.assertEqual(self.text1_italic_urln.text, self.text1_bold_urln.text)
+    # italic node
+    def test_text_node_to_html_node_italic(self):
+        html_node = text_node_to_html_node(self.italic_node)
+        self.assertEqual(html_node.tag, "i")
+        self.assertEqual(html_node.value, "italic text")
     
-    def test_text_not_eq(self):
-        self.assertNotEqual(self.text1_italic_urln.text, self.text2_italic_urln.text)
+    # code node
+    def test_text_node_to_html_node_code(self):
+        html_node = text_node_to_html_node(self.code_node)
+        self.assertEqual(html_node.tag, "code")
+        self.assertEqual(html_node.value, "somecode123")
 
-    def test_texttype_equal(self):
-        self.assertEqual(self.text1_italic_url1.text_type, self.text1_italic_url2.text_type)
+    # Link node 
+    def test_text_node_to_html_node_link(self):
+        html_node = text_node_to_html_node(self.link_node1)
+        self.assertEqual(html_node.tag, "a")
+        self.assertEqual(html_node.props, {"href": "www.url1.com"})
+    
+    # image node
+    def test_text_node_to_html_node_image(self):
+        html_node = text_node_to_html_node(self.image_node1)
+        self.assertEqual(html_node.tag, "img")
+        self.assertEqual(html_node.props, {"src": "www.url1.com", "alt": "image1"})
 
-    def test_texttype_not_equal(self):
-        self.assertNotEqual(self.text1_italic_url1.text_type, self.text1_bold_url1.text_type)
 
 if __name__ == '__main__':
     unittest.main()

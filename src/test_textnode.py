@@ -3,6 +3,7 @@ from htmlnode import LeafNode
 from textnode import TextNode, TextType, text_node_to_html_node
 
 
+# Test class by chicken
 class TestTextNode(unittest.TestCase):
     def setUp(self):
 
@@ -55,6 +56,15 @@ class TestTextNode(unittest.TestCase):
         html_node = text_node_to_html_node(self.image_node1)
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.props, {"src": "www.url1.com", "alt": "image1"})
+
+
+# Test Class by bootdev
+class TestTextNodeBoot(unittest.TestCase):
+    def test_repr(self):
+        node = TextNode("This is a text node", TextType.NORMAL, "https://www.boot.dev")
+        self.assertEqual(
+            "TextNode(This is a text node, text, https://www.boot.dev)", repr(node)
+        )
 
 
 if __name__ == '__main__':

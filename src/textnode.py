@@ -15,6 +15,8 @@ class TextNode:
         self.text_type = text_type
         self.url = url
 
+    # eq method lets us compare two TextNode objects to see if they're the same
+    # without it python would compare object references instead of their contents
     def __eq__(self, other):
         return ( 
             self.text == other.text 
@@ -22,6 +24,10 @@ class TextNode:
             and self.url == other.url
         )
 
+    # provides a str representation of our object 
+    # this is helpful with debugging
+    # without it we would see som like this '<TextNode object at 0x254h1l38dj>'
+    #helps us see important details at a glance
     def __repr__(self):
         return f'TextNode({self.text}, {self.text_type.value}, {self.url})'
 

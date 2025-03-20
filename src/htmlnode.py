@@ -6,7 +6,7 @@ class HTMLNode:
         self.props = props
 
     def to_html(self):
-        raise NotImplementedError()
+        raise NotImplementedError("to_html method not implemented")
 
     def props_to_html(self):
         html = ''
@@ -60,6 +60,8 @@ class ParentNode(HTMLNode):
                 full_html += child.to_html()
             elif isinstance(child, LeafNode): # Base Case
                 full_html += child.to_html()
+            else:
+                raise ValueError(f"Invalid child type: {type(child)}. Expected ParentNode or LeafNode.")
 
         # close the children in parent tags
         full_html += f"</{self.tag}>"

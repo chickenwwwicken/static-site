@@ -4,6 +4,7 @@ from textnode import TextNode, TextType
 
 class TestSplitNodes(unittest.TestCase):
     def test_front_split(self):
+        print("running test_front_split...")
         node = TextNode("**This is text** with a bolded phrase in the front", TextType.NORMAL)
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
         expected = [
@@ -20,6 +21,7 @@ class TestSplitNodes(unittest.TestCase):
 
     
     def test_middle_split(self):
+        print("running test_middle_split...")
         node = TextNode("This is text with a **bolded phrase** in the middle", TextType.NORMAL)
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
         expected = [
@@ -37,6 +39,7 @@ class TestSplitNodes(unittest.TestCase):
 
 
     def test_end_split(self):
+        print("running test_end_split...")
         node = TextNode("This is text with a bolded phrase in **the end**", TextType.NORMAL)
         result = split_nodes_delimiter([node], "**", TextType.BOLD)
         expected = [
@@ -53,6 +56,7 @@ class TestSplitNodes(unittest.TestCase):
 
 
     def test_no_closing_delimiter(self):
+        print("running test_no_closing_delimiter...")
         node = TextNode("This is text _with no closing delimiter", TextType.NORMAL)
         with self.assertRaises(Exception):
             split_nodes_delimiter([node], "_", TextType.ITALIC)
@@ -61,6 +65,7 @@ class TestSplitNodes(unittest.TestCase):
 
 
     def test_multiple_delimiters(self):
+        print("running test_multiple_delimiters...")
         # start with a single node containing mixed delimiters
         initial_node = TextNode("This **is** a text with _two_ delimiters", TextType.NORMAL)
 

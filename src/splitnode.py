@@ -24,7 +24,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
             # Find the closing delimiter
             if delimiter not in remaining_text:
-                raise Exception(f"Invalid Markdown syntax: No closing delimeter'{delimiter}' found")
+                raise Exception(f"Invalid Markdown syntax: No closing delimiter found")
 
             # Split at the clsing delimiter
             split_remaining = remaining_text.split(delimiter, 1)

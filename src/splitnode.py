@@ -61,3 +61,18 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     # This will directly return the match results
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+
+# -----------------------------------------------------------------------------
+# 3.5 Split Images and links
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+
+    for old_node in old_nodes:
+        if extract_markdown_images(old_node) == 
+        extracted = extract_markdown_images(old_node)
+        
+
+
+def split_nodes_link(old_nodes):
+     

@@ -1,5 +1,9 @@
 import unittest
-from splitnode import split_nodes_delimiter
+from splitnode import (
+    split_nodes_delimiter, 
+    extract_markdown_images,
+    extract_markdown_links,
+    )
 from textnode import TextNode, TextType
 
 class TestSplitNodes(unittest.TestCase):
@@ -106,6 +110,8 @@ class TestSplitNodes(unittest.TestCase):
         )
         self.assertListEqual([("link", "https://www.boot.dev")], matches)
 
+# ---------------------------------------------------------------------------
+# 3.5 Tests for splitting links
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 class HTMLNode():
-    def __init__(self, tag=None, value=None, children=None, props={}):
+    def __init__(self, tag=None, value=None, children=None, props=None):
 
         # htmlnode without tag will just render as raw text
         # tag = tag name e.g. "p", "a", "h1"
@@ -26,8 +26,23 @@ class HTMLNode():
             return ""
         props_html = ""
         for prop in self.props:
-            props_html += f'{prop}="{self.props[prop]}"'
+            props_html += f" {prop}='{self.props[prop]}'"
         return props_html
 
     def __repr__(self):
-        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
+        return f"HTMLNode(tag={self.tag}, value={self.value}, children={self.children}, props={self.props})"
+
+class LeafNode(HTMLNode):
+    def __init__(self, tag, value, props=None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+        if not self.value:
+            raise ValueError("All leaf nodes must have value")
+
+        if self.tag == None:
+            return self.value
+
+        props_str = self.props_to_html()
+        html_tag = f"<{self.tag}{props_str}>{self.value}</{self.tag}>"
+        return html_tag

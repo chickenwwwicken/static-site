@@ -1,5 +1,5 @@
 import unittest
-from splitnode import split_nodes_delimiter, split_nodes_image, split_nodes_link
+from splitnode import text_to_textnodes, split_nodes_delimiter, split_nodes_image, split_nodes_link
 from textnode import TextNode, TextType
 
 
@@ -129,6 +129,92 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes,
         )
+
+
+    # ---------------------------------------------------------
+    # -------------------final-final---------------------------
+    # ---------------------------------------------------------
+
+    def test_text_to_textnodes_plain(self):
+        text = "hello there"
+        nodes = text_to_textnodes(text)
+        assert len(nodes) == 1
+        assert nodes[0].text == "hello there"
+        assert nodes[0].text_type == TextType.TEXT
+
+    def test_text_to_textnodes_bold(self):
+        text = "this is **bold** text"
+        nodes = text_to_textnodes(text)
+
+        assert len(nodes) == 3
+        assert nodes[0].text == "this is "
+        assert nodes[0].text_type == TextType.TEXT
+
+        assert nodes[1].text == "bold"
+        assert nodes[1].text_type == TextType.BOLD
+
+    def test_text_to_textnodes_italic_and_code(self):
+        text = "_hi_ `code`"
+        nodes = text_to_textnodes(text)
+
+        assert any(n.text_type == TextType.ITALIC for n in nodes)
+        assert any(n.text_type == TextType.CODE for n in nodes)
+
+    def test_text_to_textnodes_image(self):
+        text = "look ![alt text](https://example.com/img.png)"
+        nodes = text_to_textnodes(text)
+
+        img_node = [n for n in nodes if n.text_type == TextType.IMAGE][0]
+        assert img_node.text == "alt text"
+        assert img_node.url == "https://example.com/img.png"
+
+    def test_text_to_textnodes_link(self):
+        text = "see [Boot](https://boot.dev)"
+        nodes = text_to_textnodes(text)
+
+        link_node = [n for n in nodes if n.text_type == TextType.LINK][0]
+        assert link_node.text == "Boot"
+        assert link_node.url == "https://boot.dev"
+
+    def test_text_to_textnodes_all_features(self):
+        text = "This is **bold** and _italic_ with `code` and ![alt](https://example.com/i.png) and a [link](https://example.com)"
+
+        nodes = text_to_textnodes(text)
+
+        assert len(nodes) == 10
+
+        assert nodes[0].text == "This is "
+        assert nodes[0].text_type == TextType.TEXT
+
+        assert nodes[1].text == "bold"
+        assert nodes[1].text_type == TextType.BOLD
+
+        assert nodes[2].text == " and "
+        assert nodes[2].text_type == TextType.TEXT
+
+        assert nodes[3].text == "italic"
+        assert nodes[3].text_type == TextType.ITALIC
+
+        assert nodes[4].text == " with "
+        assert nodes[4].text_type == TextType.TEXT
+
+        assert nodes[5].text == "code"
+        assert nodes[5].text_type == TextType.CODE
+
+        assert nodes[6].text == " and "
+        assert nodes[6].text_type == TextType.TEXT
+
+        assert nodes[7].text == "alt"
+        assert nodes[7].url == "https://example.com/i.png"
+        assert nodes[7].text_type == TextType.IMAGE
+
+        assert nodes[8].text == " and a "
+        assert nodes[8].text_type == TextType.TEXT
+
+        assert nodes[9].text == "link"
+        assert nodes[9].url == "https://example.com"
+        assert nodes[9].text_type == TextType.LINK
+
 
 
 if __name__ == "__main__":

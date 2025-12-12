@@ -78,6 +78,8 @@ def split_nodes_image(old_nodes):
         for alt, url in ext_image:
             # use the markdown image as delimiter
             parts = current_text.split(f"![{alt}]({url})", 1)
+            if len(parts) != 2:
+                raise ValueError("Invalid markdown, link section not closed")
             if parts[0] != "":
                 new_nodes.append(TextNode(parts[0], TextType.TEXT))
             new_nodes.append(TextNode(alt, TextType.IMAGE, url))
@@ -112,6 +114,8 @@ def split_nodes_link(old_nodes):
         for link, url in ext_link:
             # use the markdown link as delimiter
             parts = current_text.split(f"[{link}]({url})", 1)
+            if len(parts) != 2:
+                raise ValueError("Invalid markdown, link section not closed")
             if parts[0] != "":
                 new_nodes.append(TextNode(parts[0], TextType.TEXT))
             new_nodes.append(TextNode(link, TextType.LINK, url))
